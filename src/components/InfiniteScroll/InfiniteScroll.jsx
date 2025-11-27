@@ -12,15 +12,36 @@ const InfiniteScroll = () => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`https://picsum.photos/v2/list?page=${pageNo}&limit=3`);
+        const res = await fetch(
+          `https://picsum.photos/v2/list?page=${pageNo}&limit=3`
+        );
         const data = await res.json();
-        setImages(data);
+        setImages((prev) => [...prev, ...data]);
       } catch (error) {
         console.log(error);
       }
     })();
   }, [pageNo]);
-  
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          observer.unobserve(lastImage);
+          setPageNo((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    const lastImage = document.querySelector(".img-item:last-child");
+    if (lastImage) {
+      observer.observe(lastImage);
+    }
+
+    return () => observer.disconnect(); // cleanup
+  }, [images]);
+
   return (
     <div className="main-container">
       <h1 className="heading">Infinite Scroll</h1>

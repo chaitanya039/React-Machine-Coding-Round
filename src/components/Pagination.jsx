@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 // Product Card Component
 const ProductCard = ({ id, title, image }) => {
@@ -52,6 +52,9 @@ const Pagination = () => {
   const handleNextClick = () => {
     setCurrentPage((prev) => prev + 1);
   }
+  
+  // Memoizing page array once, so do not need to create again and again
+  const pageArray = useMemo(() => [...Array(noOfPages).keys()], [noOfPages]);
 
   return (
     <div className="main-container">
@@ -71,7 +74,7 @@ const Pagination = () => {
         <button className="pagination-item" disabled = {currentPage === 0} onClick={() => handlePrevClick()}>
           ⬅️
         </button>
-        {[...Array(noOfPages).keys()].map((n) => (
+        {pageArray.map((n) => (
           <button
             className={`pagination-item ${n === currentPage && "active"}`}
             onClick={() => handlePageChange(n)}

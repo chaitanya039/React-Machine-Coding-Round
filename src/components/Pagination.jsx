@@ -10,14 +10,17 @@ const ProductCard = ({ title, image }) => {
   );
 };
 
+const PAGE_SIZE = 10;
+
 const Pagination = () => {
   // Maintain State for storing fetch products
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Call API and fetch data
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch("https://dummyjson.com/products");
+      const response = await fetch("https://dummyjson.com/products?limit=200");
       const data = await response.json();
       setProducts(data.products);
     } catch (error) {
@@ -31,6 +34,25 @@ const Pagination = () => {
     fetchData();
   }, [fetchData]);
 
+  // Calculations of the values
+  const totalProducts = products.length;
+  const noOfPages = Math.ceil(totalProducts / PAGE_SIZE);
+  const start = currentPage * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
+
+  // Function to handle page change
+  const handlePageChange = (n) => {
+    setCurrentPage(n);
+  };
+  
+  const handlePrevClick = () => {
+    setCurrentPage((prev) => prev - 1);
+  }
+  
+  const handleNextClick = () => {
+    setCurrentPage((prev) => prev + 1);
+  }
+
   return (
     <div className="main-container">
       <h1 className="heading">Pagination</h1>
@@ -38,10 +60,28 @@ const Pagination = () => {
         {!products.length ? (
           <div>No Products Found!</div>
         ) : (
-          products.map((product) => (
-            <ProductCard title={product.title} image={product.thumbnail} />
-          ))
+          products
+            .slice(start, end)
+            .map((product) => (
+              <ProductCard title={product.title} image={product.thumbnail} />
+            ))
         )}
+      </div>
+      <div className="pagination-container">
+        <button className="pagination-item" disabled = {currentPage === 0} onClick={() => handlePrevClick()}>
+          ⬅️
+        </button>
+        {[...Array(noOfPages).keys()].map((n) => (
+          <button
+            className={`pagination-item ${n === currentPage && "active"}`}
+            onClick={() => handlePageChange(n)}
+          >
+            {n}
+          </button>
+        ))}
+        <button disabled={currentPage === noOfPages - 1} className="pagination-item" onClick={() => handleNextClick()}>
+          ➡️
+        </button>
       </div>
     </div>
   );

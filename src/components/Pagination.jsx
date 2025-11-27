@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 // Product Card Component
-const ProductCard = ({ title, image }) => {
+const ProductCard = ({ id, title, image }) => {
   return (
-    <div className="product-card">
+    <div key={id} className="product-card">
       <img src={image} alt={title} />
       <h3 className="title">{title}</h3>
     </div>
@@ -63,7 +63,7 @@ const Pagination = () => {
           products
             .slice(start, end)
             .map((product) => (
-              <ProductCard title={product.title} image={product.thumbnail} />
+              <ProductCard key={product.id} title={product.title} image={product.thumbnail} />
             ))
         )}
       </div>

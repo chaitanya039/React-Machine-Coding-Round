@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./InfiniteScroll.css";
 
-const Post = ({ url, title, id }) => {
-  return <img key={id} src={url} alt={title} className="img-item" />;
+const Post = ({ url, title}) => {
+  return <img src={url} alt={title} className="img-item" />;
 };
 
 const InfiniteScroll = () => {
@@ -50,7 +50,7 @@ const InfiniteScroll = () => {
           <div>Images not found!</div>
         ) : (
           images.map((image) => (
-            <Post id={image.id} title={image.author} url={image.download_url} />
+            <Post key={image.id} title={image.author} url={image.download_url} />
           ))
         )}
       </div>

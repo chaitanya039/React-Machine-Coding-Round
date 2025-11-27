@@ -1,10 +1,12 @@
 import './App.css'
-import InfiniteScroll from './components/InfiniteScroll/InfiniteScroll'
-import Pagination from './components/Pagination/Pagination'
+import VirtualizedList from './components/VirtualizedList/VirtualizedList'
+
+// Input Dummy Data
+const LIST = Array.from({ length: 100000 }, (_, index) => index + 1);
 
 function App() {
   return (
-    <InfiniteScroll />
+    <VirtualizedList list={LIST} height={600} width={400} itemHeight={50} />
   )
 }
 
